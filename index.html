@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -43,16 +44,39 @@ p{margin:0 0 28px;color:#a5a5a5;max-width:46ch}
 }
 </style>
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-QFRYX9FPTJ"></script>
-<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date());gtag("config","G-QFRYX9FPTJ",{page_title:"404",page_location:location.href})</script>
+<script>
+window.dataLayer=window.dataLayer||[];
+function gtag(){dataLayer.push(arguments)}
+gtag("js",new Date());
+gtag("config","G-QFRYX9FPTJ",{
+  page_title:"404",
+  page_location:location.href
+});
+</script>
 </head>
 <body>
-<header><div class="tab"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 1.5h6l3 3v10h-9zM9.5 1.5v3h3" fill="none" stroke="currentColor"/></svg>404.md</div></header>
-<div class="crumbs"><span id="host">4ndra.com</span><i>&rsaquo;</i><b>404.md</b></div>
+<header>
+<div class="tab">
+<svg viewBox="0 0 16 16" aria-hidden="true">
+<path d="M3.5 1.5h6l3 3v10h-9zM9.5 1.5v3h3" fill="none" stroke="currentColor"/>
+</svg>
+404.md
+</div>
+</header>
+
+<div class="crumbs">
+<span id="host">4ndra.com</span>
+<i>&rsaquo;</i>
+<b>404.md</b>
+</div>
+
 <div class="editor">
 <div id="gutter" aria-hidden="true"></div>
 <main>
 <div class="box" id="box">
-<h1 id="num" aria-label="404"><span class="ch">4</span><span class="ch">0</span><span class="ch">4</span></h1>
+<h1 id="num" aria-label="404">
+<span class="ch">4</span><span class="ch">0</span><span class="ch">4</span>
+</h1>
 <h2 id="msg">This page does not exist</h2>
 <p>This subdomain is not set up, or it was removed.</p>
 <a class="btn" id="go" href="https://4ndra.com">Go to 4ndra.com</a>
@@ -61,111 +85,101 @@ p{margin:0 0 28px;color:#a5a5a5;max-width:46ch}
 </div>
 
 <script>
-const FALLBACK_HOST = "4ndra.com";
+function detectOriginalHost(){
+  const params=new URLSearchParams(location.search);
+  const forwardedHost=params.get("host");
 
-function detectOriginalHost() {
-  // tuff 
-  try {
-    if (document.referrer) {
-      const ref = new URL(document.referrer);
-      const hostname = ref.hostname.toLowerCase();
+  if(forwardedHost){
+    const host=forwardedHost.toLowerCase();
 
-      if (
-        ref.protocol === "https:" &&
-        (hostname === "4ndra.com" ||
-         hostname.endsWith(".4ndra.com"))
-      ) {
+    if(
+      host.length<=253 &&
+      host.endsWith(".4ndra.com") &&
+      host!=="4ndra.com" &&
+      /^[a-z0-9.-]+$/.test(host) &&
+      !host.includes("..") &&
+      !host.startsWith(".") &&
+      !host.endsWith(".")
+    ){
+      return host;
+    }
+  }
+
+  try{
+    if(document.referrer){
+      const ref=new URL(document.referrer);
+      const hostname=ref.hostname.toLowerCase();
+
+      if(
+        ref.protocol==="https:" &&
+        (hostname==="4ndra.com" || hostname.endsWith(".4ndra.com"))
+      ){
         return hostname;
       }
     }
-  } catch (e) {}
+  }catch(e){}
 
-  // me when verity
-  const currentHost = location.hostname.toLowerCase();
+  const currentHost=location.hostname.toLowerCase();
 
-  if (
-    currentHost === "4ndra.com" ||
+  if(
+    currentHost==="4ndra.com" ||
     currentHost.endsWith(".4ndra.com")
-  ) {
+  ){
     return currentHost;
   }
 
-  return FALLBACK_HOST;
+  return "4ndra.com";
 }
 
-const host = detectOriginalHost();
+const host=detectOriginalHost();
 
-// tung sahur 
-document.getElementById("host").textContent = host;
-document.getElementById("msg").textContent =
-  host + " does not exist";
+document.getElementById("host").textContent=host;
+document.getElementById("msg").textContent=host+" does not exist";
+document.title="404 - "+host;
 
-document.title = "404 - " + host;
-
-// just a
 document.querySelector('meta[name="description"]')
-  .setAttribute("content", host + " does not exist.");
+.setAttribute("content",host+" does not exist.");
 
-// loser
-const g = document.getElementById("gutter");
+const g=document.getElementById("gutter");
 
-function lines() {
-  const n = Math.max(
+function lines(){
+  const n=Math.max(
     1,
-    Math.floor(
-      (document.getElementById("box").offsetHeight + 40) / 22
-    )
+    Math.floor((document.getElementById("box").offsetHeight+40)/22)
   );
 
-  let s = "";
-
-  for (let i = 1; i <= n; i++) {
-    s += i + "\n";
-  }
-
-  g.textContent = s;
+  let s="";
+  for(let i=1;i<=n;i++)s+=i+"\n";
+  g.textContent=s;
 }
 
 lines();
-addEventListener("resize", lines);
+addEventListener("resize",lines);
 
-// imgay
-if (!matchMedia("(prefers-reduced-motion:reduce)").matches) {
-  const els = [
-    ...document.querySelectorAll(".ch,#msg,.box p,.btn")
-  ];
+if(!matchMedia("(prefers-reduced-motion:reduce)").matches){
+  const els=[...document.querySelectorAll(".ch,#msg,.box p,.btn")];
 
-  els.forEach((el, i) => {
-    const r = (k) => {
-      const x = Math.sin((i + 1) * 127.1 + k * 311.7) * 43758.5453;
-      return x - Math.floor(x) - 0.5;
+  els.forEach((el,i)=>{
+    const r=(k)=>{
+      const x=Math.sin((i+1)*127.1+k*311.7)*43758.5453;
+      return x-Math.floor(x)-.5;
     };
 
-    el.animate(
-      [
-        {
-          transform:
-            "translate(" +
-            r(1) * 220 +
-            "px," +
-            r(2) * 160 +
-            "px) rotate(" +
-            r(3) * 40 +
-            "deg) scale(.85)",
-          opacity: 0
-        },
-        {
-          transform: "none",
-          opacity: 1
-        }
-      ],
+    el.animate([
       {
-        duration: 560,
-        delay: i * 70,
-        easing: "cubic-bezier(.2,.9,.25,1)",
-        fill: "backwards"
+        transform:"translate("+r(1)*220+"px,"+r(2)*160+"px) rotate("+r(3)*40+"deg) scale(.85)",
+        opacity:0
+      },
+      {
+        transform:"none",
+        opacity:1
       }
-    );
+    ],{
+      duration:560,
+      delay:i*70,
+      easing:"cubic-bezier(.2,.9,.25,1)",
+      fill:"backwards"
+    });
   });
 }
 </script>
