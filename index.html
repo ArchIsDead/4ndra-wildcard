@@ -59,25 +59,114 @@ p{margin:0 0 28px;color:#a5a5a5;max-width:46ch}
 </div>
 </main>
 </div>
+
 <script>
-const host=location.hostname||"this address";
-document.getElementById("host").textContent=host;
-document.getElementById("msg").textContent=host+" does not exist";
-document.title="404 - "+host;
-const g=document.getElementById("gutter");
-function lines(){
-const n=Math.max(1,Math.floor((document.getElementById("box").offsetHeight+40)/22));
-let s="";for(let i=1;i<=n;i++)s+=i+"\n";
-g.textContent=s
+const FALLBACK_HOST = "4ndra.com";
+
+function detectOriginalHost() {
+  // tuff 
+  try {
+    if (document.referrer) {
+      const ref = new URL(document.referrer);
+      const hostname = ref.hostname.toLowerCase();
+
+      if (
+        ref.protocol === "https:" &&
+        (hostname === "4ndra.com" ||
+         hostname.endsWith(".4ndra.com"))
+      ) {
+        return hostname;
+      }
+    }
+  } catch (e) {}
+
+  // me when verity
+  const currentHost = location.hostname.toLowerCase();
+
+  if (
+    currentHost === "4ndra.com" ||
+    currentHost.endsWith(".4ndra.com")
+  ) {
+    return currentHost;
+  }
+
+  return FALLBACK_HOST;
 }
+
+const host = detectOriginalHost();
+
+// tung sahur 
+document.getElementById("host").textContent = host;
+document.getElementById("msg").textContent =
+  host + " does not exist";
+
+document.title = "404 - " + host;
+
+// just a
+document.querySelector('meta[name="description"]')
+  .setAttribute("content", host + " does not exist.");
+
+// loser
+const g = document.getElementById("gutter");
+
+function lines() {
+  const n = Math.max(
+    1,
+    Math.floor(
+      (document.getElementById("box").offsetHeight + 40) / 22
+    )
+  );
+
+  let s = "";
+
+  for (let i = 1; i <= n; i++) {
+    s += i + "\n";
+  }
+
+  g.textContent = s;
+}
+
 lines();
-addEventListener("resize",lines);
-if(!matchMedia("(prefers-reduced-motion:reduce)").matches){
-const els=[...document.querySelectorAll(".ch,#msg,.box p,.btn")];
-els.forEach((el,i)=>{
-const r=(k)=>{const x=Math.sin((i+1)*127.1+k*311.7)*43758.5453;return x-Math.floor(x)-.5};
-el.animate([{transform:"translate("+r(1)*220+"px,"+r(2)*160+"px) rotate("+r(3)*40+"deg) scale(.85)",opacity:0},{transform:"none",opacity:1}],{duration:560,delay:i*70,easing:"cubic-bezier(.2,.9,.25,1)",fill:"backwards"})
-})
+addEventListener("resize", lines);
+
+// imgay
+if (!matchMedia("(prefers-reduced-motion:reduce)").matches) {
+  const els = [
+    ...document.querySelectorAll(".ch,#msg,.box p,.btn")
+  ];
+
+  els.forEach((el, i) => {
+    const r = (k) => {
+      const x = Math.sin((i + 1) * 127.1 + k * 311.7) * 43758.5453;
+      return x - Math.floor(x) - 0.5;
+    };
+
+    el.animate(
+      [
+        {
+          transform:
+            "translate(" +
+            r(1) * 220 +
+            "px," +
+            r(2) * 160 +
+            "px) rotate(" +
+            r(3) * 40 +
+            "deg) scale(.85)",
+          opacity: 0
+        },
+        {
+          transform: "none",
+          opacity: 1
+        }
+      ],
+      {
+        duration: 560,
+        delay: i * 70,
+        easing: "cubic-bezier(.2,.9,.25,1)",
+        fill: "backwards"
+      }
+    );
+  });
 }
 </script>
 </body>
